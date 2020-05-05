@@ -30,11 +30,11 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	let remap = vscode.commands.registerCommand('frontMatter.remap', () => {
 		Settings.remap();
 	});
-	
+
 	let setDate = vscode.commands.registerCommand('frontMatter.setDate', () => {
 		Article.setDate();
 	});
-
+	
 	let generateSlug = vscode.commands.registerCommand('frontMatter.generateSlug', () => {
 		Article.generateSlug();
 	});
@@ -55,6 +55,12 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 	subscriptions.push(vscode.window.onDidChangeTextEditorSelection(triggerShowDraftStatus));
 	// Automatically run the command
 	triggerShowDraftStatus();
+
+	// Subscribe date settings on save
+	subscriptions.push(vscode.workspace.onWillSaveTextDocument(e => {
+		Article.addCreatedDate(e);
+		Article.updateModifiedDate(e);
+	}));
 
 	// Subscribe all commands
 	subscriptions.push(insertTags);

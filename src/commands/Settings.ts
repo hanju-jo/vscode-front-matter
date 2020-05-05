@@ -65,7 +65,6 @@ export class Settings {
     }
   }
 
-
   /**
    * Export the tags/categories front matter to the user settings
    */

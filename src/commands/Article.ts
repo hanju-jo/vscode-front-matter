@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 import { TaxonomyType } from "../models";
-import { CONFIG_KEY, SETTING_DATE_FORMAT, EXTENSION_NAME, SETTING_SLUG_PREFIX, SETTING_SLUG_SUFFIX } from "../constants/settings";
+import { CONFIG_KEY, SETTING_ADD_CREATED_IF_EMPTY_ON_SAVE, SETTING_UPDATE_MODIFIED_ON_SAVE, SETTING_DATE_FORMAT, EXTENSION_NAME, SETTING_SLUG_PREFIX, SETTING_SLUG_SUFFIX } from "../constants/settings";
 import { format } from "date-fns";
 import { ArticleHelper, SettingsHelper } from '../helpers';
+import matter = require('gray-matter');
 
 
 export class Article {
@@ -82,15 +83,78 @@ export class Article {
       return;
     }
 
+    this.setArticleDate(config, article, 'date');
+    ArticleHelper.update(editor, article);
+  }
+
+
+  /**
+   * Add the article created if it's emtpy on save
+   */
+  public static async addCreatedDate(event: vscode.TextDocumentWillSaveEvent) {
+    const config = vscode.workspace.getConfiguration(CONFIG_KEY);
+
+    const addCreatedIfEmpty = config.get(SETTING_ADD_CREATED_IF_EMPTY_ON_SAVE) as boolean;
+    if (!addCreatedIfEmpty) {
+      return;
+    }
+
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      return;
+    }
+
+    const article = ArticleHelper.getFrontMatter(editor);
+    if (!article || article.data['created']) {
+      return;
+    }
+
+    this.setArticleDate(config, article, 'created');
+
+    const updateModifiedOnSave = config.get(SETTING_UPDATE_MODIFIED_ON_SAVE) as boolean;
+    if (updateModifiedOnSave) {
+      this.setArticleDate(config, article, 'modified');
+    }
+
+    let update = ArticleHelper.update(editor, article);
+    event.waitUntil(Promise.resolve([update]));
+  }
+
+  /**
+   * Update the article modified on save
+   */
+  public static async updateModifiedDate(event: vscode.TextDocumentWillSaveEvent) {
+    const config = vscode.workspace.getConfiguration(CONFIG_KEY);
+
+    const updateModifiedOnSave = config.get(SETTING_UPDATE_MODIFIED_ON_SAVE) as boolean;
+    if (!updateModifiedOnSave) {
+      return;
+    }
+
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      return;
+    }
+
+    const article = ArticleHelper.getFrontMatter(editor);
+    if (!article) {
+      return;
+    }
+
+    this.setArticleDate(config, article, 'modified');
+
+    let update = ArticleHelper.update(editor, article);
+    event.waitUntil(Promise.resolve([update]));
+  }
+
+  private static setArticleDate(config: vscode.WorkspaceConfiguration, article: matter.GrayMatterFile<string>, articleKey: string): void {
     const dateFormat = config.get(SETTING_DATE_FORMAT) as string;
     try {
       if (dateFormat && typeof dateFormat === "string") {
-        article.data["date"] = format(new Date(), dateFormat);
+        article.data[articleKey] = format(new Date(), dateFormat);
       } else {
-        article.data["date"] = new Date();
+        article.data[articleKey] = new Date();
       }
-      
-      ArticleHelper.update(editor, article);
     } catch (e) {
       vscode.window.showErrorMessage(`${EXTENSION_NAME}: Something failed while parsing the date format. Check your "${CONFIG_KEY}${SETTING_DATE_FORMAT}" setting.`);
       console.log(e.message);

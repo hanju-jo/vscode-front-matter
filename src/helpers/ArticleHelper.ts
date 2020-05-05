@@ -13,7 +13,7 @@ export class ArticleHelper {
    * 
    * @param editor 
    */
-  public static getFrontMatter(editor: vscode.TextEditor) {   
+  public static getFrontMatter(editor: vscode.TextEditor): matter.GrayMatterFile<string> | null {
     const language: string = getFmLanguage(); 
     const langOpts = getFormatOpts(language);
     let article: matter.GrayMatterFile<string> | null = matter(editor.document.getText(), {

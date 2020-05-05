@@ -60,9 +60,19 @@
 					"type": "array",
 					"description": "Specifies the categories which can be used in the Front Matter"
 				},
+				"frontMatter.taxonomy.addCreatedIfEmptyOnSave": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Specify to add created time automatically on save if it's empty. Default: false"
+				},
+				"frontMatter.taxonomy.updateModifiedOnSave": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Specify to update modified time automatically on save. Default: false"
+				},
 				"frontMatter.taxonomy.dateFormat": {
 					"type": "string",
-					"markdownDescription": "Specify the date format for your articles. Check [date-fns formating](https://date-fns.org/v2.0.1/docs/format) for more information."
+					"markdownDescription": "Specify the datetime format for your articles. Check [date-fns formating](https://date-fns.org/v2.0.1/docs/format) for more information."
 				},
 				"frontMatter.taxonomy.slugPrefix": {
 					"type": "string",
