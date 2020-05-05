@@ -1,22 +1,15 @@
 {
-	"name": "vscode-front-matter",
-	"displayName": "Front Matter",
-	"description": "Simplifies working with front matter of your articles. Useful extension when you are using a static site generator like: Hugo, Jekyll, Hexo, NextJs, Gatsby, and many more...",
+	"name": "vscode-front-matter-hack",
+	"displayName": "Front Matter Hack",
+	"description": "Extended version of [Front Matter](https://marketplace.visualstudio.com/items?itemName=eliostruyf.vscode-front-matter)",
 	"icon": "assets/front-matter.png",
-	"version": "1.1.1",
+	"version": "0.0.1",
 	"preview": false,
-	"publisher": "eliostruyf",
+	"publisher": "hanjujo",
 	"galleryBanner": {
 		"color": "#011627",
 		"theme": "dark"
 	},
-	"badges": [
-		{
-			"description": "version",
-			"url": "https://img.shields.io/github/package-json/v/estruyf/vscode-front-matter?color=green&label=vscode-front-matter&style=flat-square",
-			"href": "https://github.com/estruyf/vscode-front-matter"
-		}
-	],
 	"engines": {
 		"vscode": "^1.37.0"
 	},
@@ -24,18 +17,13 @@
 		"Other"
 	],
 	"keywords": [
-		"Front Matter",
-		"Hugo",
-		"Jekyll",
-		"Gatsby",
-		"Hexo",
-		"Taxonomy"
+		"Front Matter"
 	],
 	"license": "MIT",
 	"repository": {
-		"type": "git",
-		"url": "https://github.com/estruyf/vscode-front-matter"
-	},
+        "type": "git",
+        "url": "https://github.com/hanju-jo/vscode-front-matter.git"
+    },
 	"activationEvents": [
 		"*",
 		"onCommand:frontMatter.insertTags",
@@ -150,7 +138,8 @@
 		"vscode:prepublish": "webpack --mode production",
 		"webpack": "webpack --mode development",
 		"webpack-dev": "webpack --mode development --watch",
-		"test-compile": "tsc -p ./"
+		"test-compile": "tsc -p ./",
+		"vsce-package": "vsce package"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
@@ -165,6 +154,7 @@
 		"ts-loader": "^6.0.4",
 		"tslint": "^5.12.1",
 		"typescript": "^3.3.1",
+		"vsce": "^1.75.0",
 		"vscode-test": "^1.0.2",
 		"webpack": "^4.39.2",
 		"webpack-cli": "^3.3.7"
