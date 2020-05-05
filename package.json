@@ -103,6 +103,11 @@
 						"Specifies you want to use YAML markup for the front matter (default)",
 						"Specifies you want to use TOML markup for the front matter"
 					]
+				},
+				"frontMatter.taxonomy.filenamePattern": {
+					"type": "string",
+					"default": ".*",
+					"markdownDescription": "Specify targeted filename pattern as regex. For example, `.*\\.md$` is for markdown files which ends with `.md`. Default: `.*`(all files)"
 				}
 			}
 		},

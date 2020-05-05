@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as matter from "gray-matter";
 import { stopWords } from '../constants/stopwords-en';
 import { charMap } from '../constants/charMap';
-import { CONFIG_KEY, SETTING_INDENT_ARRAY, SETTING_REMOVE_QUOTES } from '../constants';
+import { CONFIG_KEY, SETTING_FILENAME_PATTERN, SETTING_INDENT_ARRAY, SETTING_REMOVE_QUOTES } from '../constants';
 import { DumpOptions } from 'js-yaml';
 import { TomlEngine, getFmLanguage, getFormatOpts } from './TomlEngine';
 
@@ -14,6 +14,12 @@ export class ArticleHelper {
    * @param editor 
    */
   public static getFrontMatter(editor: vscode.TextEditor): matter.GrayMatterFile<string> | null {
+    const config = vscode.workspace.getConfiguration(CONFIG_KEY);
+    const fileNamePattern = config.get(SETTING_FILENAME_PATTERN) as string;
+    if (!editor.document.fileName.match(fileNamePattern)) {
+      return null;
+    }
+
     const language: string = getFmLanguage(); 
     const langOpts = getFormatOpts(language);
     let article: matter.GrayMatterFile<string> | null = matter(editor.document.getText(), {
